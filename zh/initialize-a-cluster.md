@@ -17,6 +17,21 @@ aliases: ['/docs-cn/tidb-in-kubernetes/dev/initialize-a-cluster/']
 
 请参考 TidbInitializer [示例](https://github.com/pingcap/tidb-operator/blob/master/manifests/initializer/tidb-initializer.yaml)和 [API 文档](https://github.com/pingcap/tidb-operator/blob/master/docs/api-references/docs.md)（示例和 API 文档请切换到当前使用的 TiDB Operator 版本）以及下面的步骤，完成 TidbInitializer CR，保存到文件 `${cluster_name}/tidb-initializer.yaml`。
 
+### 设置集群的命名空间和名称
+
+在 `${cluster_name}/tidb-initializer.yaml` 文件中，修改 `spec.cluster.namespace` 和 `spec.cluster.name` 字段:
+
+{{< copyable "shell-regular" >}}
+
+```yaml
+# ...
+spec:
+  # ...
+  cluster:
+    namespace: ${cluster_namespace}
+    name: ${cluster_name}
+```
+
 ### 初始化账号和密码设置
 
 集群创建时默认会创建 `root` 账号，但是密码为空，这会带来一些安全性问题。可以通过如下步骤为 `root` 账号设置初始密码：
@@ -49,7 +64,7 @@ kubectl create secret generic tidb-secret --from-literal=root=${root_password} -
 
 集群在初始化过程还可以自动执行 `initSql` 中的 SQL 语句用于初始化，该功能可以用于默认给集群创建一些 database 或者 table，并且执行一些用户权限管理类的操作。例如如下设置会在集群创建完成后自动创建名为 `app` 的 database，并且赋予 `developer` 账号对 `app` 的所有管理权限：
 
-{{< copyable "yaml" >}}
+{{< copyable "" >}}
 
 ```yaml
 spec:
@@ -76,8 +91,6 @@ kubectl apply -f ${cluster_name}/tidb-initializer.yaml --namespace=${namespace}
 如果服务器没有外网，需要在有外网的机器上将集群初始化用到的 Docker 镜像下载下来并上传到服务器上，然后使用 `docker load` 将 Docker 镜像安装到服务器上。
 
 初始化一套 TiDB 集群会用到下面这些 Docker 镜像：
-
-{{< copyable "shell-regular" >}}
 
 ```shell
 tnir/mysqlclient:latest

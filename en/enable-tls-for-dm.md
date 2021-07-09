@@ -15,7 +15,12 @@ To enable TLS between components of the DM cluster, perform the following steps:
 
 1. Generate certificates for each component of the DM cluster to be created:
     - A set of server-side certificates for the DM-master/DM-worker component, saved as the Kubernetes Secret objects: `${cluster_name}-${component_name}-cluster-secret`
-   - A set of shared client-side certificates for the various clients of each component, saved as the Kubernetes Secret objects: `${cluster_name}-dm-client-secret`.
+    - A set of shared client-side certificates for the various clients of each component, saved as the Kubernetes Secret objects: `${cluster_name}-dm-client-secret`.
+
+    > **Note:**
+    >
+    > The Secret objects you created must follow the above naming convention. Otherwise, the deployment of the DM cluster will fail.
+
 2. Deploy the cluster, and set `.spec.tlsCluster.enabled` to `true`.
 3. Configure `dmctl` to connect to the cluster.
 
@@ -505,10 +510,9 @@ metadata:
 spec:
   tlsCluster:
     enabled: true
-  version: v2.0.0-rc.2
+  version: v2.0.4
   pvReclaimPolicy: Retain
-  discovery:
-    address: "http://${tidb_cluster_name}-discovery.${tidb_namespace}:10261"
+  discovery: {}
   master:
     baseImage: pingcap/dm
     replicas: 1
@@ -543,7 +547,7 @@ Use `dmctl`:
 
 ``` shell
 cd /var/lib/dm-master-tls
-/dmctl --ssl-ca=ca.crt --ssl-cert=tls.crt --ssl-key=tls.key --master-addr https://127.0.0.1:8261 list-member
+/dmctl --ssl-ca=ca.crt --ssl-cert=tls.crt --ssl-key=tls.key --master-addr 127.0.0.1:8261 list-member
 ```
 
 ## Use DM to migrate data between MySQL/TiDB databases that enable TLS for the MySQL client
@@ -574,10 +578,9 @@ metadata:
   name: ${cluster_name}
   namespace: ${namespace}
 spec:
-  version: v2.0.0-rc.2
+  version: v2.0.4
   pvReclaimPolicy: Retain
-  discovery:
-    address: "http://${tidb_cluster_name}-discovery.${tidb_namespace}:10261"
+  discovery: {}
   tlsClientSecretNames:
     - ${mysql_secret_name1}
     - ${tidb_secret_name}
@@ -593,6 +596,7 @@ After configuring `spec.tlsClientSecretNames`, TiDB Operator will mount the Secr
 
     ``` yaml
     source-id: mysql-replica-01
+    relay-dir: /var/lib/dm-worker/relay
     from:
       host: ${mysql_host1}
       user: dm
@@ -620,6 +624,14 @@ After configuring `spec.tlsClientSecretNames`, TiDB Operator will mount the Secr
         ssl-ca: /var/lib/source-tls/${tidb_secret_name}/ca.crt
         ssl-cert: /var/lib/source-tls/${tidb_secret_name}/tls.crt
         ssl-key: /var/lib/source-tls/${tidb_secret_name}/tls.key
+    
+    mysql-instances:
+    - source-id: "replica-01"
+      loader-config-name: "global"
+      
+    loaders:
+      global:
+        dir: "/var/lib/dm-worker/dumped_data"    
     ```
 
 ### Step 4: Start the migration tasks

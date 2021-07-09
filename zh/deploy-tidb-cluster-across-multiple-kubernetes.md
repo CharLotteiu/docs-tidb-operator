@@ -56,13 +56,13 @@ cluster1_namespace="pingcap"
 {{< copyable "shell-regular" >}}
 
 ```bash
-cat << EOF | kubectl apply -f -n ${cluster1_namespace} - 
+cat << EOF | kubectl apply -n ${cluster1_namespace} -f -
 apiVersion: pingcap.com/v1alpha1
 kind: TidbCluster
 metadata:
   name: "${cluster1_name}"
 spec:
-  version: v4.0.10
+  version: v5.1.0
   timezone: UTC
   pvReclaimPolicy: Delete
   enableDynamicConfiguration: true
@@ -113,13 +113,13 @@ cluster2_namespace="pingcap"
 {{< copyable "shell-regular" >}}
 
 ```bash
-cat << EOF | kubectl apply -f -n ${cluster2_namespace} - 
+cat << EOF | kubectl apply -n ${cluster2_namespace} -f -
 apiVersion: pingcap.com/v1alpha1
 kind: TidbCluster
 metadata:
   name: "${cluster2_name}"
 spec:
-  version: v4.0.10
+  version: v5.1.0
   timezone: UTC
   pvReclaimPolicy: Delete
   enableDynamicConfiguration: true
@@ -440,13 +440,13 @@ cluster1_namespace="pingcap"
 执行以下指令：
 
 ```
-cat << EOF | kubectl apply -f -n ${cluster1_namespace} - 
+cat << EOF | kubectl apply -n ${cluster1_namespace} -f -
 apiVersion: pingcap.com/v1alpha1
 kind: TidbCluster
 metadata:
   name: "${cluster1_name}"
 spec:
-  version: v4.0.10
+  version: v5.1.0
   timezone: UTC
   tlsCluster:
    enabled: true
@@ -510,13 +510,13 @@ cluster2_namespace="pingcap"
 {{< copyable "shell-regular" >}}
 
 ```bash
-cat << EOF | kubectl apply -f -n ${cluster2_namespace} - 
+cat << EOF | kubectl apply -n ${cluster2_namespace} -f -
 apiVersion: pingcap.com/v1alpha1
 kind: TidbCluster
 metadata:
   name: "${cluster2_name}"
 spec:
-  version: v4.0.10
+  version: v5.1.0
   timezone: UTC
   tlsCluster:
    enabled: true
