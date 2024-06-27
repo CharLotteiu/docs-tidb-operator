@@ -171,7 +171,7 @@ TiDB Operator 包含许多实现 TiDB 集群不同组件的自定义资源类型
 {{< copyable "shell-regular" >}}
 
 ```shell
-kubectl create -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/manifests/crd.yaml
+kubectl create -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/manifests/crd.yaml
 ```
 
 <details>
@@ -232,7 +232,7 @@ customresourcedefinition.apiextensions.k8s.io/tidbclusterautoscalers.pingcap.com
     {{< copyable "shell-regular" >}}
 
     ```shell
-    helm install --namespace tidb-admin tidb-operator pingcap/tidb-operator --version v1.6.0-beta.1
+    helm install --namespace tidb-admin tidb-operator pingcap/tidb-operator --version v1.6.0
     ```
 
     如果访问 Docker Hub 网速较慢，可以使用阿里云上的镜像：
@@ -240,9 +240,9 @@ customresourcedefinition.apiextensions.k8s.io/tidbclusterautoscalers.pingcap.com
     {{< copyable "shell-regular" >}}
 
     ```
-    helm install --namespace tidb-admin tidb-operator pingcap/tidb-operator --version v1.6.0-beta.1 \
-        --set operatorImage=registry.cn-beijing.aliyuncs.com/tidb/tidb-operator:v1.6.0-beta.1 \
-        --set tidbBackupManagerImage=registry.cn-beijing.aliyuncs.com/tidb/tidb-backup-manager:v1.6.0-beta.1 \
+    helm install --namespace tidb-admin tidb-operator pingcap/tidb-operator --version v1.6.0 \
+        --set operatorImage=registry.cn-beijing.aliyuncs.com/tidb/tidb-operator:v1.6.0 \
+        --set tidbBackupManagerImage=registry.cn-beijing.aliyuncs.com/tidb/tidb-backup-manager:v1.6.0 \
         --set scheduler.kubeSchedulerImageName=registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler
     ```
 
@@ -295,7 +295,7 @@ tidb-scheduler-644d59b46f-4f6sb            2/2     Running   0          2m22s
 
 ``` shell
 kubectl create namespace tidb-cluster && \
-    kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic/tidb-cluster.yaml
+    kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic/tidb-cluster.yaml
 ```
 
 如果访问 Docker Hub 网速较慢，可以使用 UCloud 上的镜像：
@@ -304,7 +304,7 @@ kubectl create namespace tidb-cluster && \
 
 ```
 kubectl create namespace tidb-cluster && \
-    kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic-cn/tidb-cluster.yaml
+    kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic-cn/tidb-cluster.yaml
 ```
 
 <details>
@@ -325,7 +325,7 @@ tidbcluster.pingcap.com/basic created
 >
 > ``` shell
 > kubectl create namespace tidb-cluster && \
->     kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic/pd-micro-service-cluster.yaml
+>     kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic/pd-micro-service-cluster.yaml
 > ```
 >
 > 查看 Pod 状态：
@@ -350,7 +350,7 @@ tidbcluster.pingcap.com/basic created
 {{< copyable "shell-regular" >}}
 
 ``` shell
-kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic/tidb-dashboard.yaml
+kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic/tidb-dashboard.yaml
 ```
 
 如果访问 Docker Hub 网速较慢，可以使用 UCloud 上的镜像：
@@ -358,7 +358,7 @@ kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-
 {{< copyable "shell-regular" >}}
 
 ```
-kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic-cn/tidb-dashboard.yaml
+kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic-cn/tidb-dashboard.yaml
 ```
 
 <details>
@@ -375,7 +375,7 @@ tidbdashboard.pingcap.com/basic created
 {{< copyable "shell-regular" >}}
 
 ``` shell
-kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic/tidb-monitor.yaml
+kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic/tidb-monitor.yaml
 ```
 
 如果访问 Docker Hub 网速较慢，可以使用 UCloud 上的镜像：
@@ -383,7 +383,7 @@ kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-
 {{< copyable "shell-regular" >}}
 
 ```
-kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0-beta.1/examples/basic-cn/tidb-monitor.yaml
+kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/v1.6.0/examples/basic-cn/tidb-monitor.yaml
 ```
 
 <details>
@@ -429,7 +429,7 @@ basic-tikv-0                      1/1     Running   0          8m13s
 
 ### 转发 TiDB 服务 4000 端口
 
-本步骤将端口从本地主机转发到 Kubernetes 中的 TiDB **Servcie**。
+本步骤将端口从本地主机转发到 Kubernetes 中的 TiDB **Service**。
 
 首先，获取 tidb-cluster 命名空间中的服务列表：
 
@@ -487,7 +487,7 @@ mysql --comments -h 127.0.0.1 -P 14000 -u root
 ```
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MySQL connection id is 178505
-Server version: 8.0.11-TiDB-v8.0.0 TiDB Server (Apache License 2.0) Community Edition, MySQL 8.0 compatible
+Server version: 8.0.11-TiDB-v8.1.0 TiDB Server (Apache License 2.0) Community Edition, MySQL 8.0 compatible
 
 Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
@@ -536,10 +536,10 @@ mysql> select * from information_schema.tikv_region_status where db_name=databas
 ```sql
 mysql> select tidb_version()\G
 *************************** 1. row ***************************
-         tidb_version(): Release Version: v8.0.0
+         tidb_version(): Release Version: v8.1.0
                 Edition: Community
         Git Commit Hash: 700beafa79844b7b48dcba1c452ea3ff49d8f271
-             Git Branch: heads/refs/tags/v8.0.0
+             Git Branch: heads/refs/tags/v8.1.0
          UTC Build Time: 2023-11-10 14:38:24
               GoVersion: go1.21.3
            Race Enabled: false
@@ -731,10 +731,10 @@ mysql --comments -h 127.0.0.1 -P 24000 -u root -e 'select tidb_version()\G'
 
 ```
 *************************** 1. row ***************************
-tidb_version(): Release Version: v8.0.0
+tidb_version(): Release Version: v8.1.0
 Edition: Community
 Git Commit Hash: 700beafa79844b7b48dcba1c452ea3ff49d8f271
-Git Branch: heads/refs/tags/v8.0.0
+Git Branch: heads/refs/tags/v8.1.0
 UTC Build Time: 2023-11-10 14:38:24
 GoVersion: go1.21.3
 Race Enabled: false

@@ -24,7 +24,7 @@ If you are using a NUMA-based CPU, you need to enable `Static`'s CPU management 
 
 ## Configure TiDB deployment
 
-To configure a TiDB deployment, you need to configure the `TiDBCluster` CR. Refer to the [TidbCluster example](https://github.com/pingcap/tidb-operator/blob/v1.6.0-beta.1/examples/advanced/tidb-cluster.yaml) for an example. For the complete configurations of `TiDBCluster` CR, refer to [API documentation](https://github.com/pingcap/tidb-operator/blob/v1.6.0-beta.1/docs/api-references/docs.md).
+To configure a TiDB deployment, you need to configure the `TiDBCluster` CR. Refer to the [TidbCluster example](https://github.com/pingcap/tidb-operator/blob/v1.6.0/examples/advanced/tidb-cluster.yaml) for an example. For the complete configurations of `TiDBCluster` CR, refer to [API documentation](https://github.com/pingcap/tidb-operator/blob/v1.6.0/docs/api-references/docs.md).
 
 > **Note:**
 >
@@ -41,11 +41,11 @@ Usually, components in a cluster are in the same version. It is recommended to c
 
 Here are the formats of the parameters:
 
-- `spec.version`: the format is `imageTag`, such as `v8.0.0`
+- `spec.version`: the format is `imageTag`, such as `v8.1.0`
 
 - `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.baseImage`: the format is `imageName`, such as `pingcap/tidb`
 
-- `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.version`: the format is `imageTag`, such as `v8.0.0`
+- `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.version`: the format is `imageTag`, such as `v8.1.0`
 
 ### Recommended configuration
 
@@ -956,7 +956,13 @@ To add the data high availability feature on Kubernetes:
 
     Currently, TiDB Operator automatically sets the labels for the TiDB server corresponding to the `location-labels` in `pd.config`. TiDB depends on the `zone` label to support some features of Follower Read. TiDB Operator obtains the value of `zone`, `failure-domain.beta.kubernetes.io/zone`, and `topology.kubernetes.io/zone` labels as `zone`. TiDB Operator only sets labels of the node where the TiDB server is located and ignores other labels.
 
-Since v1.4.0, when setting labels for TiKV and TiDB nodes, TiDB Operator supports setting shortened aliases for some labels provided by Kubernetes by default. In some scenarios, using aliases can help optimize the scheduling performance of PD. When you use TiDB Operator to set aliases for the `location-labels` of PD, if there are no corresponding labels for a node, then TiDB Operator uses the original labels automatically.
+* Set the topological information of the Node where the TiProxy node is located.
+
+    Starting from TiDB Operator v1.6.0, if the deployed TiProxy version >= v1.1.0, TiDB Operator automatically obtains the topological information of the Node for TiProxy and calls the corresponding interface of the TiProxy to set this information as TiProxy's labels. Based on these labels, TiProxy prioritizes forwarding requests to a local TiDB server.
+
+    Currently, TiDB Operator automatically sets the labels for the TiProxy node corresponding to the `location-labels` in `pd.config`. TiProxy depends on the `zone` label to forward requests to a local TiDB server. TiDB Operator obtains the value of `zone`, `failure-domain.beta.kubernetes.io/zone`, and `topology.kubernetes.io/zone` labels as `zone`. TiDB Operator only sets labels of the node where the TiProxy is located and ignores other labels.
+
+Starting from v1.4.0, when setting labels for TiKV and TiDB nodes, TiDB Operator supports setting shortened aliases for some labels provided by Kubernetes by default. In some scenarios, using aliases can help optimize the scheduling performance of PD. When you use TiDB Operator to set aliases for the `location-labels` of PD, if there are no corresponding labels for a Kubernetes node, then TiDB Operator uses the original labels automatically.
 
 Currently, TiDB Operator supports the following label aliases:
 

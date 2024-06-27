@@ -25,7 +25,7 @@ aliases: ['/docs-cn/tidb-in-kubernetes/dev/configure-a-tidb-cluster/','/zh/tidb-
 
 ## 部署配置
 
-通过配置 `TidbCluster` CR 来配置 TiDB 集群。参考 TidbCluster [示例](https://github.com/pingcap/tidb-operator/blob/v1.6.0-beta.1/examples/advanced/tidb-cluster.yaml)和 [API 文档](https://github.com/pingcap/tidb-operator/blob/v1.6.0-beta.1/docs/api-references/docs.md)（示例和 API 文档请切换到当前使用的 TiDB Operator 版本）完成 TidbCluster CR(Custom Resource)。
+通过配置 `TidbCluster` CR 来配置 TiDB 集群。参考 TidbCluster [示例](https://github.com/pingcap/tidb-operator/blob/v1.6.0/examples/advanced/tidb-cluster.yaml)和 [API 文档](https://github.com/pingcap/tidb-operator/blob/v1.6.0/docs/api-references/docs.md)（示例和 API 文档请切换到当前使用的 TiDB Operator 版本）完成 TidbCluster CR(Custom Resource)。
 
 > **注意：**
 >
@@ -41,9 +41,9 @@ aliases: ['/docs-cn/tidb-in-kubernetes/dev/configure-a-tidb-cluster/','/zh/tidb-
 
 相关参数的格式如下：
 
-- `spec.version`，格式为 `imageTag`，例如 `v8.0.0`
+- `spec.version`，格式为 `imageTag`，例如 `v8.1.0`
 - `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.baseImage`，格式为 `imageName`，例如 `pingcap/tidb`
-- `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.version`，格式为 `imageTag`，例如 `v8.0.0`
+- `spec.<pd/tidb/tikv/pump/tiflash/ticdc>.version`，格式为 `imageTag`，例如 `v8.1.0`
 
 ### 推荐配置
 
@@ -732,7 +732,7 @@ spec:
 
 ### IPv6 支持
 
-TiDB 自 v6.5.1 起支持使用 IPv6 地址进行所有网络连接。如果你使用 v1.4.3 或以上版本的 TiDB Operator 部署 TiDB，你可以通过配置 `spec.preferIPv6` 为 `ture` 来部署监听 IPv6 地址的 TiDB 集群。
+TiDB 自 v6.5.1 起支持使用 IPv6 地址进行所有网络连接。如果你使用 v1.4.3 或以上版本的 TiDB Operator 部署 TiDB，你可以通过配置 `spec.preferIPv6` 为 `true` 来部署监听 IPv6 地址的 TiDB 集群。
 
 ```yaml
 spec:
@@ -930,7 +930,13 @@ topologySpreadConstraints:
 
     目前，TiDB Operator 会自动为 TiDB server 设置 `pd.config` 的配置中 `location-labels` 对应的 Labels 信息。同时，TiDB 依赖 `zone` Label 支持 Follower Read 的部分功能。TiDB Operator 会依次获取 Label `zone`、`failure-domain.beta.kubernetes.io/zone` 和 `topology.kubernetes.io/zone` 的值作为 `zone` 的值。TiDB Operator 仅设置 TiDB server 所在的节点上包含的 Labels 并忽略其他 Labels。
 
-从 TiDB Operator v1.4.0 开始，在为 TiKV 和 TiDB 节点设置 Labels 时，TiDB Operator 支持为部分 Kubernetes 默认提供的 Labels 设置较短的别名。使用较短的 Labels 别名在部分场景下有助于优化 PD 的调度性能。当使用 TiDB Operator 把 PD 的 `location-labels` 设置为这些别名时，如果对应的节点不包含对应的 Labels，TiDB Operator 自动使用原始 Labels 的值。
+* 为 TiProxy 节点设置所在的 Node 节点的拓扑信息
+
+    从 TiDB Operator v1.6.0 开始，如果部署的 TiProxy 版本 >= v1.1.0，TiDB Operator 会自动为 TiProxy 获取其所在 Node 节点的拓扑信息，并调用 TiProxy 的对应接口将这些信息设置为 TiProxy 的 Labels。这样 TiProxy 可以根据这些 Labels 优先将请求转发到本地的 TiDB server。
+
+    目前，TiDB Operator 会自动为 TiProxy 设置 `pd.config` 的配置中 `location-labels` 对应的 Labels 信息。同时，TiProxy 依赖 `zone` Label 将请求转发到本地的 TiDB server。TiDB Operator 会依次获取 Label `zone`、`failure-domain.beta.kubernetes.io/zone` 和 `topology.kubernetes.io/zone` 的值作为 `zone` 的值。TiDB Operator 仅设置 TiProxy 所在的节点上包含的 Labels 并忽略其他 Labels。
+
+从 TiDB Operator v1.4.0 开始，在为 TiKV 和 TiDB 节点设置 Labels 时，TiDB Operator 支持为部分 Kubernetes 默认提供的 Labels 设置较短的别名。使用较短的 Labels 别名在部分场景下有助于优化 PD 的调度性能。当使用 TiDB Operator 把 PD 的 `location-labels` 设置为这些别名时，如果对应的 Kubernetes 节点不包含对应的 Labels，TiDB Operator 自动使用原始 Labels 的值。
 
 目前 TiDB Operator 支持如下短 Label 和原始 Label 的映射：
 
